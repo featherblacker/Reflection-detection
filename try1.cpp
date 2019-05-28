@@ -45,13 +45,13 @@ public:Mat processimage(Mat img) {
 	cvtColor(absY, absY, COLOR_BGR2GRAY);
 	cvtColor(absX, absX, COLOR_BGR2GRAY);
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			if (absX.at<uchar>(i, j) > 40) {
-				absY.at<uchar>(i, j) = 0;
-			}
-		}
-	}
+	//for (int i = 0; i < img.cols; i++) {
+	//	for (int j = 0; j < img.rows; j++) {
+	//		if (absX.at<uchar>(i, j) > 40) {
+	//			absY.at<uchar>(i, j) = 0;
+	//		}
+	//	}
+	//}
 
 	threshold(absY, absY, 80, 255, THRESH_BINARY);
 	//imshow("p", absY);
@@ -203,6 +203,7 @@ public:bool judge(Mat img){
 }
 };
 int main() {
+	clock_t t1 = clock();
 	vector<String> files;
 	vector<String> nfiles;
 	String IMG_PATH = "E:\\new\\img6\\Yes\\*.jpg";
@@ -220,14 +221,14 @@ int main() {
 			yes += 1.0;
 		}
 	}
-	//int no = 0;
-	//for (int i = 0; i < count2; i++) {
-	//	readfile File(nfiles[i]);
-	//	cout << nfiles[i] << endl;
-	//	solution = File.show();
-	//	if (!solution) {
-	//		no += 1;
-	//	}
-	//}
-	cout << yes / count << endl;
+	double no = 0.0;
+	for (int i = 0; i < count2; i++) {
+		detection File(nfiles[i]);
+		cout << nfiles[i] << endl;
+		if (!File.ans) {
+			no += 1;
+		}
+	}
+	cout << (yes+no) / (count+count2) << endl;
+	cout << (clock() - t1) * 1.0 / CLOCKS_PER_SEC * 1000/(count + count2) << endl;
 }
