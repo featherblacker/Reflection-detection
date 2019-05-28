@@ -4,17 +4,19 @@
 #include<opencv2\opencv.hpp>
 #include<io.h>
 #include<string>
+#include<time.h>
 
 using namespace std;
 using namespace cv;
 
 class readfile {
 public:
+	bool ans = true;
 	readfile(String file) {
-		bool ans = true;
-		String window_name = "Demo";
+		
+		String window_name = "Image";
 		Mat img = imread(file);
-		resize(img, img, Size(300, 600));
+		resize(img, img, Size(3*img.cols,3*img.rows));
 		int height = img.rows;
 		int width = img.cols;
 
@@ -27,9 +29,9 @@ public:
 		Sobel(img, absX, CV_16S, 2, 0);
 		convertScaleAbs(absX, absX);
 
-
 		cvtColor(absY, absY, COLOR_BGR2GRAY);
 		cvtColor(absX, absX, COLOR_BGR2GRAY);
+
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
@@ -39,19 +41,16 @@ public:
 			}
 		}
 
+		
 		double ret;
-		threshold(absY, absY, 90, 255, THRESH_BINARY);
+		threshold(absY, absY, 80, 255, THRESH_BINARY);
+		//imshow("p", absY);
 		GaussianBlur(absY, absY, Size(3, 3), 0);
+	
+		Mat element = getStructuringElement(MORPH_RECT, Size(11, 3));
+		morphologyEx(absY, absY, MORPH_CLOSE, element);
 
-		/*int a = 3;
-		int b = 11;
-		Mat kernal[a][b];
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 11; j++) {
-				kernal[i][j] = 0;
-			}
-		}
-		morphologyEx(absY, absY, MORPH_CLOSE,kernal);*/
+		//imshow(window_name, absY);
 
 		medianBlur(absY, absY, 5);
 		threshold(absY, absY, 30, 255, THRESH_BINARY);
@@ -191,18 +190,34 @@ public:
 	bool show() {
 		return ans;
 	}
-	private:
-		bool ans = true;
 };
 void main() {
 	vector<String> files;
-	vector<String> images;
+	vector<String> nfiles;
 	String IMG_PATH = "E:\\new\\img6\\Yes\\*.jpg";
+	String IMG_PATH2 = "E:\\new\\img6\\No\\*.jpg";
 	glob(IMG_PATH, files);
+	glob(IMG_PATH2, nfiles);
 	size_t count = files.size();
+	size_t count2 = nfiles.size();
+	int yes = 0;
+	bool solution;
 	for (int i = 0; i < count; i++) {
 		readfile File(files[i]);
-		File.show();
-		waitKey(0);
+		cout << files[i] << endl;
+		solution = File.show();
+		if (solution) {
+			yes += 1;
+		}
 	}
+	int no = 0;
+	for (int i = 0; i < count2; i++) {
+		readfile File(nfiles[i]);
+		cout << nfiles[i] << endl;
+		solution = File.show();
+		if (!solution) {
+			no += 1;
+		}
+	}
+	cout << double(yes + no) / double(count + count2) << endl;
 }
