@@ -45,14 +45,6 @@ public:Mat processimage(Mat img) {
 	cvtColor(absY, absY, COLOR_BGR2GRAY);
 	cvtColor(absX, absX, COLOR_BGR2GRAY);
 
-	//for (int i = 0; i < img.cols; i++) {
-	//	for (int j = 0; j < img.rows; j++) {
-	//		if (absX.at<uchar>(i, j) > 40) {
-	//			absY.at<uchar>(i, j) = 0;
-	//		}
-	//	}
-	//}
-
 	threshold(absY, absY, 80, 255, THRESH_BINARY);
 	//imshow("p", absY);
 	GaussianBlur(absY, absY, Size(3, 3), 0);
@@ -78,7 +70,7 @@ public:Mat processimage(Mat img) {
 		area = contourArea(contours[i]);
 
 		boundRect[i] = boundingRect(Mat(contours[i]));
-		//
+
 		if (area < 30) {
 			for (int m = 0; m < boundRect[i].height; m++) {
 				for (int n = 0; n < boundRect[i].width; n++) {
