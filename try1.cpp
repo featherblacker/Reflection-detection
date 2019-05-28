@@ -57,7 +57,7 @@ public:Mat processimage(Mat img) {
 	//imshow("p", absY);
 	GaussianBlur(absY, absY, Size(3, 3), 0);
 
-	Mat element = getStructuringElement(MORPH_RECT, Size(11, 3));
+	Mat element = getStructuringElement(MORPH_RECT, Size(7, 3));
 	morphologyEx(absY, absY, MORPH_CLOSE, element);
 
 	//imshow(window_name, absY);
