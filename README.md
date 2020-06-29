@@ -1,3 +1,2 @@
-# Sobel
-Sobel C++
-Detection
+# Reflection Detection
+This project is how I use C++ and Python to detect employee in the pictures from pedestrains. I did this when I was in internship in Botian Company development section to develop the algorithm to differentiate workers from passengers in the pictures. All picures I got are photoed from cameras from many directions on the highways. These pictures are properties of the company so I cannot put that dataset here but I keep my algorithm here.
