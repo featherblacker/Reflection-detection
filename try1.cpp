@@ -22,7 +22,7 @@ public:
 		bool ans = judge(lines);
 }
 public:Mat readimage(String file) {
-
+/*打开并放缩文件*/
 		String window_name = "Image";
 		Mat img = imread(file);
 		resize(img, img, Size(3 * img.cols, 3 * img.rows));

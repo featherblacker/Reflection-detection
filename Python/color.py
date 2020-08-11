@@ -12,10 +12,10 @@ def search(IMG_PATH):
     image = cv2.imread(IMG_PATH)
     cv2.imshow('origin.jpg', image)
     h, w, t = image.shape
-    image = cv2.resize(image,(w*3, h*3),interpolation=cv2.INTER_CUBIC)
-    h = h*3
-    w = w*3
-    image = cv2.medianBlur(image,3)
+    image = cv2.resize(image, (w * 3, h * 3), interpolation=cv2.INTER_CUBIC)
+    h = h * 3
+    w = w * 3
+    image = cv2.medianBlur(image, 3)
     # cv2.imshow('origion', image)
     # image = cv2.morphologyEx(image,cv2.MORPH_OPEN,np.ones(5))
     # image = cv2.morphologyEx(image,cv2.MORPH_CLOSE,np.ones(5))
@@ -36,26 +36,27 @@ def search(IMG_PATH):
     greenImage = np.zeros((h, w, t))
     for i in range(h):
         for j in range(w):
-            if 77>=image2[i][j][0]>=35 and 255>=image2[i][j][1]>=25 and 255>=image2[i][j][2]>=25:
-                greenImage[i][j][:]=[255,255,255]
+            if 77 >= image2[i][j][0] >= 35 and 255 >= image2[i][j][1] >= 25 and 255 >= image2[i][j][2] >= 25:
+                greenImage[i][j][:] = [255, 255, 255]
                 anyGreen = True
 
     if anyGreen:
-        greenImage = cv2.cvtColor(np.uint8(greenImage),cv2.COLOR_BGR2GRAY)
+        greenImage = cv2.cvtColor(np.uint8(greenImage), cv2.COLOR_BGR2GRAY)
         # greenImage = cv2.medianBlur(greenImage, 3)
-        greenBinary = cv2.adaptiveThreshold(greenImage,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,5,25)
+        greenBinary = cv2.adaptiveThreshold(greenImage, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 25)
 
         contours, hierarchy = cv2.findContours(greenImage, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         contoursNew = []
         areaNew = []
-        con = [] # con[i][0]:conx, con[i][1]:cony, con[i][2]:conw, con[i][3]:conh
+        con = []  # con[i][0]:conx, con[i][1]:cony, con[i][2]:conw, con[i][3]:conh
         conNew = []
         for i, cnt in enumerate(contours):
             con.append(cv2.boundingRect(cnt))
-            area=cv2.contourArea(cnt)
+            area = cv2.contourArea(cnt)
             if area > 100:
                 contoursNew.append(cnt)
-                image = cv2.rectangle(image, (con[i][0], con[i][1]), (con[i][0] + con[i][2], con[i][1] + con[i][3]), (255, 0, 0), 2)
+                image = cv2.rectangle(image, (con[i][0], con[i][1]), (con[i][0] + con[i][2], con[i][1] + con[i][3]),
+                                      (255, 0, 0), 2)
                 areaNew.append(area)
         areaNew = np.array(areaNew)
         arr = []
@@ -65,11 +66,11 @@ def search(IMG_PATH):
         arr = np.array(arr)
 
         if arr.size > 0:
-            x,y,recw,rech=cv2.boundingRect(np.array(arr))
+            x, y, recw, rech = cv2.boundingRect(np.array(arr))
             # image = cv2.rectangle(image, (x, y), (x + recw, y + rech), (0, 0, 255), 2)
-            rectSize = rech*recw
+            rectSize = rech * recw
 
-            if rectSize*0.7 > areaNew.sum() >= rectSize/10 and 8 >= areaNew.size >= 2:
+            if rectSize * 0.7 > areaNew.sum() >= rectSize / 10 and 8 >= areaNew.size >= 2:
                 cv2.putText(image, 'Yes', (0, 40), cv2.FONT_HERSHEY_COMPLEX, 1.2, (0, 255, 0), 2)
                 print('是工作人员')
             else:
@@ -108,7 +109,6 @@ def search(IMG_PATH):
 
 if __name__ == '__main__':
     for f in os.listdir(IMG_PATH):
-        abs_file = os.path.join(IMG_PATH,f)
+        abs_file = os.path.join(IMG_PATH, f)
         if os.path.isfile(abs_file):
             search(abs_file)
-
